@@ -10,7 +10,6 @@ namespace file_organization
     {
         public override void Resolve(int homeAddress, int nodeAddress)
         {
-            Console.WriteLine("Resolver");
             //Check if home address is empty
             Node lastNode = (Node) base.storage[homeAddress];
             while (lastNode.next != -1)

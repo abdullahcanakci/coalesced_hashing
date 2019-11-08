@@ -16,10 +16,9 @@ namespace file_organization
 
         public void Run()
         {
-            bool programRunning = true;
-            List<int> protoList = createRandomList(30);
+            List<int> protoList = createRandomList(100);
 
-            Storage storage = new Storage(new LISCHResolver(), new RBottom(), protoList.Count);
+            Storage storage = new Storage(new LICHResolver(), new RBottom(), protoList.Count);
 
 
             
@@ -37,7 +36,7 @@ namespace file_organization
             Random r = new Random();
             for (int i = 0; i < numberOfElements; i++)
             {
-                randomList.Add(r.Next(0, 60));
+                randomList.Add(r.Next(0, 500));
             }
             return randomList;
         }

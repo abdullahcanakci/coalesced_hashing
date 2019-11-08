@@ -21,5 +21,7 @@ namespace file_organization
         }
 
         public override bool HasCellar => false;
+
+        public override string Name => "LISCH";
     }
 }

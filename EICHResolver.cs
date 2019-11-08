@@ -7,5 +7,6 @@ namespace file_organization
     class EICHResolver : EISCHResolver
     {
         public override bool HasCellar => true;
+        public override string Name => "EICH";
     }
 }

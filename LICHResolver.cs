@@ -7,5 +7,6 @@ namespace file_organization
     internal class LICHResolver : LISCHResolver
     {
         public override bool HasCellar => true;
+        public override string Name => "LICH";
     }
 }

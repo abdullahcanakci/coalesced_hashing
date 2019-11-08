@@ -12,5 +12,6 @@ namespace file_organization
         public abstract void Resolve(int homeAddress, int nodeAddress);
 
         public abstract bool HasCellar { get; }
+        public abstract String Name { get; }
     }
 }

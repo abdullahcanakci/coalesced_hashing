@@ -7,6 +7,7 @@ namespace file_organization
     class EISCHResolver : CollisionResolver
     {
         public override bool HasCellar => false;
+        public override string Name => "EISCH";
 
         public override void Resolve(int homeAddress, int nodeAddress)
         {

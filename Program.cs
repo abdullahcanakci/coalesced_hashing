@@ -16,21 +16,37 @@ namespace file_organization
 
         public void Run()
         {
-            List<int> protoList = createRandomList(22);
-            //List<int> protoList = new List<int>(new int[] {27, 18, 29, 28, 39, 13, 16, 42, 17});
-
-            Storage lisch = new Storage(new LISCHResolver(), protoList.Count);
-
-            Storage beisch = new Storage(new BEISCHResolver(), protoList.Count);
-            
-            foreach (var item in protoList)
+            bool running = true;
+            while (running)
             {
-                lisch.Add(item);
-                beisch.Add(item);
-            }
+                Console.Write("Enter number of elements to be checked(0 to exit): ");
+                int input = int.Parse(Console.ReadLine());
+                if(input == 0)
+                {
+                    running = false;
+                    continue;
+                }
+                input = input > 900 ? 900 : input;
 
-            lisch.PrintTable();
-            beisch.PrintTable();
+                int[] protoList = createRandomList(input).ToArray();
+                //int[] protoList = new int[] {27, 18, 29, 28, 39, 13, 16, 42, 17};
+
+                Storage lisch = new Storage(new LISCHResolver(), protoList);
+                Storage lich = new Storage(new LICHResolver(), protoList);
+                Storage eisch = new Storage(new EISCHResolver(), protoList);
+                Storage eich = new Storage(new EICHResolver(), protoList);
+
+                Storage beisch = new Storage(new BEISCHResolver(), protoList);
+                Storage rlisch = new Storage(new RLISCHResolver(), protoList);
+
+                lisch.PrintTable();
+                lich.PrintTable();
+                eisch.PrintTable();
+                eich.PrintTable();
+
+                beisch.PrintTable();
+                rlisch.PrintTable();
+            }
         }
 
         public List<int> createRandomList(int numberOfElements)

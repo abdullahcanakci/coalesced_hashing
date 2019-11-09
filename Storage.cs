@@ -28,11 +28,17 @@ namespace file_organization
             storageLimit = storage.Length;
             if (resolver.HasCellar)
             {
-                storageLimit = (int)(storageLimit * 0.86);
+                storageLimit = CalculateStorageSize((int)(storageLimit * 0.80));
                 // 0.86 factor came from 
                 // Vitter, Jeffrey. (1982). Implementations for Coalesced Hashing.. Commun. ACM. 25. 911-926. 10.1145/358728.358745. 
                 // It is for PF50, for PF90 graph on 915 shows that 79-80%
             }
+        }
+
+        public Storage(CollisionResolver resolver, int[] list) : this(resolver, list.Length)
+        {
+            this.AddRange(list);
+            this.CalculateProbeNumber(list);
         }
 
         /// <summary>
@@ -45,7 +51,7 @@ namespace file_organization
 
         private int CalculateStorageSize(int capacity)
         {
-            int limit = (int)(capacity * 1.1);
+            int limit = (int)(capacity * 1.2);
             for(int i = limit; i > capacity; i--)
             {
                 if (IsPrime(i))
@@ -53,7 +59,7 @@ namespace file_organization
                     return i;
                 }
             }
-            return CalculateStorageSize((int)(Math.Ceiling(capacity*1.1)));
+            return CalculateStorageSize((int)(Math.Ceiling(capacity*1.2)));
         }
 
         /// <summary>
@@ -79,7 +85,7 @@ namespace file_organization
 
         public int Add(int key)
         {
-            int homeAddress = GetHash(key) % this.storagePrime;
+            int homeAddress = GetHash(key) % this.storageLimit;
 
             Node node = new Node(key);
             if (storage[homeAddress] == null)
@@ -88,6 +94,7 @@ namespace file_organization
                 this.Count++;
             } else
             {
+                this.NumberOfCollisions++;
                 int R = resolver.RPointer;
                 if(R == -1) // is full
                 {
@@ -102,6 +109,33 @@ namespace file_organization
             return -1;
         }
 
+        public void AddRange(int[] keys)
+        {
+            foreach (var item in keys)
+            {
+                this.Add(item);
+            }
+            CalculateProbeNumber(keys);
+        }
+
+        public void CalculateProbeNumber(int[] keys)
+        {
+            foreach(var item in keys)
+            {
+                int homeAddress = GetHash(item) % this.storageLimit;
+                Node node = storage[homeAddress];
+                if (node.key == item) { NumberOfProbes++; }
+                else
+                {
+                    while (node.key != item)
+                    {
+                        node = storage[node.next];
+                        NumberOfProbes++;
+                    }
+                }
+            }
+        }
+
         private int GetHash(int key)
         {
             return key;
@@ -112,17 +146,19 @@ namespace file_organization
         {
             Console.BackgroundColor = ConsoleColor.DarkRed;
             
-            Console.Write("Algorithm Name: {0} | ", this.resolver.Name);
+            Console.Write("\n\nAlgorithm Name: {0} | ", this.resolver.Name);
             Console.Write("Number of Items: {0} | Capacity: {1} | ", this.Count, this.Capacity);
-            Console.Write("Packing Factor: {0:0.00} | \n\n", this.PackingFactor);
+            Console.Write("Packing Factor: {0:0.00} | ", this.PackingFactor);
+            Console.Write("Collisions: {0} | ", this.NumberOfCollisions);
+            Console.Write("Probe Number: {0} | \n\n", this.NumberOfProbes);
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Write("Ind");
-            for(int i = 0; i < 20; i++)
+            for(int i = 0; i < 15; i++)
             {
-                Console.Write("|{0}", i.ToString().PadLeft(5).PadRight(8));
+                Console.Write("|{0}", i.ToString().PadLeft(5).PadRight(9));
             }
             Console.WriteLine("|");
-            for(int row = 0; row <= this.Capacity / 20; row++)
+            for(int row = 0; row <= this.Capacity / 15; row++)
             {
                 if(row % 2 != 0)
                 {
@@ -132,24 +168,24 @@ namespace file_organization
                     Console.BackgroundColor = ConsoleColor.DarkBlue;
                 }
 
-                Console.Write("{0, -3}", row*20);
+                Console.Write("{0, -3}", row*15);
 
-                int itemsInRow = 20;
+                int itemsInRow = 15;
                 if(storage.Length - itemsInRow * row < itemsInRow)
                 {
                     itemsInRow = storage.Length - itemsInRow * row;
                 }
                 for(int column = 0; column < itemsInRow; column++)
                 {
-                    Node item = storage[20 * row + column];
+                    Node item = storage[15 * row + column];
                     if (item != null)
                     {
                         var KeyString = item.key.ToString();
                         var NextString = item.next == -1 ? "#" : item.next.ToString();
-                        Console.Write("|{0, 4}-{1, 3}", KeyString, NextString);
+                        Console.Write("|{0, 4}-{1, 4}", KeyString, NextString);
                     }else
                     {
-                        Console.Write("|    -   ");
+                        Console.Write("|    -    ");
                     }
                 }
                 Console.WriteLine("|");

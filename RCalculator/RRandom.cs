@@ -4,6 +4,9 @@ using System.Text;
 
 namespace file_organization
 {
+    /// <summary>
+    /// Finds a random spot on storage to prevent overcrowding regions of storage.
+    /// </summary>
     class RRandom : RCalculator
     {
         public override int getR(Node[] storage)

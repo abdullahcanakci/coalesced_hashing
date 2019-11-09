@@ -4,6 +4,9 @@ using System.Text;
 
 namespace file_organization
 {
+    /// <summary>
+    /// R calculation from bottom of a storage area
+    /// </summary>
     class RBottom : RCalculator
     {
         public override int getR(Node[] storage)
@@ -15,6 +18,8 @@ namespace file_organization
                     return i;
                 }
             }
+            // -1 really should not be returned
+            // Request origin has the capability to check if the storage area is full without iteration
             return -1;
         }
     }

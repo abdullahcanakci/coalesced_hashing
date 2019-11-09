@@ -4,6 +4,10 @@ using System.Text;
 
 namespace file_organization
 {
+    /// <summary>
+    /// Finds a suitable place to place elements.
+    /// Alternates between Top and Bottom 
+    /// </summary>
     class RBidirectional : RCalculator
     {
         private bool fromBottom = false;

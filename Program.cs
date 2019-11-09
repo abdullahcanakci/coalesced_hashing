@@ -10,8 +10,7 @@ namespace file_organization
         {
             Program app = new Program();
             app.Run();
-
-
+            //Non static App run
         }
 
         public void Run()

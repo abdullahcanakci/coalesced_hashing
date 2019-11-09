@@ -4,6 +4,10 @@ using System.Text;
 
 namespace file_organization
 {
+    /// <summary>
+    /// Handles a storage area all responsibility.
+    /// 
+    /// </summary>
     class Storage
     {
         private CollisionResolver resolver;
@@ -48,7 +52,6 @@ namespace file_organization
         /// </summary>
         /// <param name="capacity">Number of items to be stored.</param>
         /// <returns>Calculated storage size.</returns>
-
         private int CalculateStorageSize(int capacity)
         {
             int limit = (int)(capacity * 1.2);
@@ -115,9 +118,11 @@ namespace file_organization
             {
                 this.Add(item);
             }
-            CalculateProbeNumber(keys);
         }
 
+        /// <summary>
+        /// Given a array of key it will calculate number of probes to reach every element
+        /// </summary>
         public void CalculateProbeNumber(int[] keys)
         {
             foreach(var item in keys)
@@ -138,8 +143,8 @@ namespace file_organization
 
         private int GetHash(int key)
         {
-            return key;
-            //return (key + key % 10 + (int)Math.Sqrt(key));
+            //return key;
+            return ((key * 97 ) / 3 + key % 10 + key % 100 + key % 1000 + 1);
         }
 
         public void PrintTable()

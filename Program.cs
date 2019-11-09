@@ -16,19 +16,21 @@ namespace file_organization
 
         public void Run()
         {
-            List<int> protoList = createRandomList(900);
+            List<int> protoList = createRandomList(22);
             //List<int> protoList = new List<int>(new int[] {27, 18, 29, 28, 39, 13, 16, 42, 17});
 
-            Storage storage = new Storage(new LISCHResolver(), new RBottom(), protoList.Count);
+            Storage lisch = new Storage(new LISCHResolver(), protoList.Count);
 
-
+            Storage beisch = new Storage(new BEISCHResolver(), protoList.Count);
             
             foreach (var item in protoList)
             {
-                storage.Add(item);
+                lisch.Add(item);
+                beisch.Add(item);
             }
 
-            storage.PrintTable();
+            lisch.PrintTable();
+            beisch.PrintTable();
         }
 
         public List<int> createRandomList(int numberOfElements)
@@ -41,24 +43,5 @@ namespace file_organization
             }
             return randomList;
         }
-
-        public void printArray(ArrayList list)
-        {
-            int itemsInRow = 25;
-            int itemCountInRow = 0;
-            foreach (var i in list)
-            {
-                Console.Write(i.ToString().PadLeft(5));
-                itemCountInRow++;
-                if (itemCountInRow == itemsInRow)
-                {
-                    Console.Write("\n");
-                    itemCountInRow = 0;
-                }
-            }
-            Console.Write("\n");
-        }
-
-
     }
 }

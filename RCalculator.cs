@@ -5,9 +5,7 @@ using System.Text;
 namespace file_organization
 {
     public abstract class RCalculator
-    {
-        public Node[] storage;
-
-        public abstract int getR();
+    { 
+        public abstract int getR(Node[] storage);
     }
 }

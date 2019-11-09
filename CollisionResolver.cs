@@ -9,9 +9,13 @@ namespace file_organization
     {
         public Node[] storage;
 
-        public abstract void Resolve(int homeAddress, int nodeAddress);
+        internal RCalculator rCalculator;
 
+        public abstract void Resolve(int homeAddress, int nodeAddress);
+        
+        public int RPointer { get => rCalculator.getR(storage); }
         public abstract bool HasCellar { get; }
+
         public abstract String Name { get; }
     }
 }

@@ -8,6 +8,12 @@ namespace file_organization
 {
     internal class LISCHResolver : CollisionResolver
     {
+        public override bool HasCellar => false;
+
+        public override String Name => "LISCH";
+
+        public LISCHResolver () { base.rCalculator = new RBottom(); }
+
         public override void Resolve(int homeAddress, int nodeAddress)
         {
             //Check if home address is empty
@@ -19,9 +25,5 @@ namespace file_organization
             lastNode.next = nodeAddress;
 
         }
-
-        public override bool HasCellar => false;
-
-        public override string Name => "LISCH";
     }
 }

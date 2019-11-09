@@ -7,7 +7,6 @@ namespace file_organization
     class Storage
     {
         private CollisionResolver resolver;
-        private RCalculator rCalculator;
         private int storageLimit;
         private Node[] storage;
         private int storagePrime;
@@ -18,22 +17,31 @@ namespace file_organization
         public int Capacity => storage.Length;
         public double PackingFactor => (Count/(double)storagePrime) * 100;
 
-        public Storage(CollisionResolver resolver, RCalculator rCalc, int capacity)
+        public Storage(CollisionResolver resolver, int capacity)
         {
             this.storagePrime = CalculateStorageSize(capacity);
             this.storage = new Node[storagePrime];
             this.resolver = resolver;
-            this.rCalculator = rCalc;
 
             this.resolver.storage = storage;
-            this.rCalculator.storage = storage;
             
             storageLimit = storage.Length;
             if (resolver.HasCellar)
             {
                 storageLimit = (int)(storageLimit * 0.86);
+                // 0.86 factor came from 
+                // Vitter, Jeffrey. (1982). Implementations for Coalesced Hashing.. Commun. ACM. 25. 911-926. 10.1145/358728.358745. 
+                // It is for PF50, for PF90 graph on 915 shows that 79-80%
             }
         }
+
+        /// <summary>
+        /// Storage size must be no larger than number of items * 1.1.
+        /// By design we are required to have ~90% packing factor and this should ensure it.
+        /// Number of elements must be prime otherwise collisions might occur just because of the storage size.
+        /// </summary>
+        /// <param name="capacity">Number of items to be stored.</param>
+        /// <returns>Calculated storage size.</returns>
 
         private int CalculateStorageSize(int capacity)
         {
@@ -71,7 +79,7 @@ namespace file_organization
 
         public int Add(int key)
         {
-            int homeAddress = GetHash(key) % this.storagePrime; //TODO should be prime
+            int homeAddress = GetHash(key) % this.storagePrime;
 
             Node node = new Node(key);
             if (storage[homeAddress] == null)
@@ -80,7 +88,7 @@ namespace file_organization
                 this.Count++;
             } else
             {
-                int R = rCalculator.getR();
+                int R = resolver.RPointer;
                 if(R == -1) // is full
                 {
                     return -1;
@@ -108,7 +116,7 @@ namespace file_organization
             Console.Write("Number of Items: {0} | Capacity: {1} | ", this.Count, this.Capacity);
             Console.Write("Packing Factor: {0:0.00} | \n\n", this.PackingFactor);
             Console.BackgroundColor = ConsoleColor.Black;
-            Console.Write("   ");
+            Console.Write("Ind");
             for(int i = 0; i < 20; i++)
             {
                 Console.Write("|{0}", i.ToString().PadLeft(5).PadRight(8));
@@ -124,7 +132,7 @@ namespace file_organization
                     Console.BackgroundColor = ConsoleColor.DarkBlue;
                 }
 
-                Console.Write("{0, -3}", row);
+                Console.Write("{0, -3}", row*20);
 
                 int itemsInRow = 20;
                 if(storage.Length - itemsInRow * row < itemsInRow)

@@ -4,15 +4,17 @@ using System.Text;
 
 namespace file_organization
 {
-    class RBottom : RCalculator
+    class RRandom : RCalculator
     {
         public override int getR(Node[] storage)
         {
-            for (int i = storage.Length - 1; i >= 0; i--)
+            Random r = new Random();
+            for(int i = 0; i < storage.Length; i++)
             {
-                if (storage[i] == null)
+                int rand = r.Next(0, storage.Length);
+                if(storage[rand] == null)
                 {
-                    return i;
+                    return rand;
                 }
             }
             return -1;

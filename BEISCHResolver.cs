@@ -6,8 +6,6 @@ namespace file_organization
 {
     class BEISCHResolver : EISCHResolver
     {
-        public override bool HasCellar => false;
-
         public override String Name => "BEISCH";
 
         public BEISCHResolver() { base.rCalculator = new RBidirectional(); }

@@ -127,18 +127,41 @@ namespace file_organization
         {
             foreach(var item in keys)
             {
-                int homeAddress = GetHash(item) % this.storageLimit;
-                Node node = storage[homeAddress];
-                if (node.key == item) { NumberOfProbes++; }
-                else
-                {
-                    while (node.key != item)
-                    {
-                        node = storage[node.next];
-                        NumberOfProbes++;
-                    }
-                }
+                NumberOfProbes += Find(item).Probes;
             }
+        }
+
+        public Result Find(int key)
+        {
+            int probes = 1;
+            int homeAddress = GetHomeAddress(key);
+
+            if(storage[homeAddress] == null)
+            {
+                return new Result(-1, probes);
+            }
+            if(storage[homeAddress].key == key)
+            {
+                return new Result(homeAddress, probes);
+            }
+
+            while(storage[homeAddress].key != key)
+            {
+                homeAddress = storage[homeAddress].next;
+                probes++;
+                if(storage[homeAddress].next == -1) { continue; }
+            }
+            
+            if(storage[homeAddress].key != key)
+            {
+                return new Result(-1, probes);
+            }
+            return new Result(homeAddress, probes);   
+        }
+
+        private int GetHomeAddress(int key)
+        {
+            return GetHash(key) % this.storageLimit;
         }
 
         private int GetHash(int key)
@@ -198,6 +221,19 @@ namespace file_organization
             Console.BackgroundColor = ConsoleColor.Black;
         }
 
+        public void PrintInfo()
+        {
+            Console.Write("{0, 11}| ", this.resolver.Name);
+            Console.Write("{0, 13 :0.00}| ", this.PackingFactor);
+            Console.Write("{0, 8}| ", this.NumberOfCollisions);
+            Console.Write("{0, 15}| \n", this.NumberOfProbes);
+        }
+
+        public void PrintSearch(int key)
+        {
+            Result r = Find(key);
+            Console.Write("{0, 7} | {1, 7} | {2, 5}\n", this.resolver.Name, r.Address == -1 ? "N/A" : r.Address.ToString(), r.Probes);
+        }
         public Node Get(int index)
         {
             return storage[index];

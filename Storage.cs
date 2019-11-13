@@ -21,6 +21,8 @@ namespace file_organization
         public int Capacity => storage.Length;
         public double PackingFactor => (Count/(double)storagePrime) * 100;
 
+        public String ResolverName => resolver.Name;
+
         public Storage(CollisionResolver resolver, int capacity)
         {
             this.storagePrime = CalculateStorageSize(capacity);

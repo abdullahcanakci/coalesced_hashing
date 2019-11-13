@@ -46,7 +46,7 @@ namespace file_organization
 
                     bool tablePrinting = false, comparePrinting = false, search = false;
 
-                    int input = PrintMenu("Your action?", new string[] { "Print tables.", "Print comparison", "Search", "Restart" });
+                    int input = PrintMenu("Your action?", new List<String>() { "Print tables.", "Print comparison", "Search", "Restart" });
 
                     switch (input)
                     {
@@ -66,25 +66,23 @@ namespace file_organization
 
                     while (tablePrinting)
                     {
+                        List<String> names = new List<string>();
+                        foreach(var item in storages)
+                        {
+                            names.Add(item.ResolverName);
+                        }
+                        names.Add("ALL");
+                        names.Add("Next");
                         int select = PrintMenu(
                             "Enter algoritm you want to print table of",
-                            new string[] {
-                            "LISCH", // 0
-                            "LICH",
-                            "EISCH",
-                            "EICH",
-                            "BEISCH",
-                            "RLISCH",
-                            "ALL", // 6
-                            "Next", // 7
-                            }
+                            names
                         );
-                        if(select == 7)
+                        if(select == names.Count - 1)
                         {
                             tablePrinting = false;
                             continue;
                         }
-                        if(select == 6)
+                        if(select == names.Count - 2)
                         {
                             foreach (var item in storages)
                             {
@@ -123,10 +121,10 @@ namespace file_organization
             }
         }
 
-        public int PrintMenu(String message, string[] options)
+        public int PrintMenu(String message, List<String> options)
         {
             Console.WriteLine(message);
-            for(int i = 0; i < options.Length; i++)
+            for(int i = 0; i < options.Count; i++)
             {
                 Console.WriteLine("{0}. {1}", i, options[i]);
             }
@@ -135,7 +133,7 @@ namespace file_organization
             while (!validEntry)
             {
                 input = int.Parse(Console.ReadLine());
-                if(input >= 0 || input < options.Length)
+                if(input >= 0 || input < options.Count)
                 {
                     validEntry = true;
                 }

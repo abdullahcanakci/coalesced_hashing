@@ -19,16 +19,31 @@ namespace file_organization
             while (running)
             {
                 Console.Write("Enter number of elements to be checked(0 to exit): ");
-                int numberOfElements = int.Parse(Console.ReadLine());
+                int numberOfElements;
+                if(!int.TryParse(Console.ReadLine(), out numberOfElements))
+                {
+                    Console.WriteLine("Please enter a valid number between 0 and 900.");
+                    continue;
+                }
+
+                if(numberOfElements < 0)
+                {
+                    Console.WriteLine("Input must be a positive integer.");
+                    continue;
+                }
+                
                 if(numberOfElements == 0)
                 {
                     running = false;
                     continue;
                 }
                 numberOfElements = numberOfElements > 900 ? 900 : numberOfElements;
+                //Math.Max() is not a valid alternative. 
+                //It works on bytes for some reason?
 
                 int[] protoList = createRandomList(numberOfElements).ToArray();
                 //int[] protoList = new int[] {27, 18, 29, 28, 39, 13, 16, 42, 17};
+                //List used in lectures.
                 Storage[] storages = new Storage[]
                 {
                     new Storage(new LISCHResolver(), protoList),
@@ -132,12 +147,21 @@ namespace file_organization
             int input = 0;
             while (!validEntry)
             {
-                input = int.Parse(Console.ReadLine());
-                if(input >= 0 || input < options.Count)
+                Console.Write("?");
+                if (int.TryParse(Console.ReadLine(), out input))
                 {
-                    validEntry = true;
+                    if (input >= 0 && input < options.Count)
+                    {
+                        validEntry = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please enter a selection between 0 and {0}.", (options.Count - 1));
+                    }
+                } else
+                {
+                    Console.WriteLine("Please enter a valid number.");
                 }
-                
             }
             return input;
         }

@@ -35,9 +35,8 @@ namespace file_organization
             if (resolver.HasCellar)
             {
                 storageLimit = CalculateStorageSize((int)(storageLimit * 0.80));
-                // 0.86 factor came from 
                 // Vitter, Jeffrey. (1982). Implementations for Coalesced Hashing.. Commun. ACM. 25. 911-926. 10.1145/358728.358745. 
-                // It is for PF50, for PF90 graph on 915 shows that 79-80%
+                // for PF90 graph on page 915 shows that 79-80%
             }
         }
 
@@ -56,7 +55,7 @@ namespace file_organization
         /// <returns>Calculated storage size.</returns>
         private int CalculateStorageSize(int capacity)
         {
-            int limit = (int)(capacity * 1.2);
+            int limit = (int)(capacity * 1.1);
             for(int i = limit; i > capacity; i--)
             {
                 if (IsPrime(i))
@@ -64,7 +63,7 @@ namespace file_organization
                     return i;
                 }
             }
-            return CalculateStorageSize((int)(Math.Ceiling(capacity*1.2)));
+            return CalculateStorageSize((int)(Math.Ceiling(capacity*1.1)));
         }
 
         /// <summary>
@@ -90,7 +89,7 @@ namespace file_organization
 
         public int Add(int key)
         {
-            int homeAddress = GetHash(key) % this.storageLimit;
+            int homeAddress = GetHomeAddress(key);
 
             Node node = new Node(key);
             if (storage[homeAddress] == null)
@@ -149,9 +148,9 @@ namespace file_organization
 
             while(storage[homeAddress].key != key)
             {
-                homeAddress = storage[homeAddress].next;
                 probes++;
-                if(storage[homeAddress].next == -1) { continue; }
+                if (storage[homeAddress].next == -1) { break; }
+                homeAddress = storage[homeAddress].next;
             }
             
             if(storage[homeAddress].key != key)
@@ -163,13 +162,14 @@ namespace file_organization
 
         private int GetHomeAddress(int key)
         {
-            return GetHash(key) % this.storageLimit;
+            return (int)(GetHash(key) % this.storageLimit);
+            
         }
 
-        private int GetHash(int key)
+        private long GetHash(int key)
         {
             //return key;
-            return ((key * 97 ) / 3 + key % 10 + key % 100 + key % 1000 + 1);
+            return Math.Abs(key.ToString().GetHashCode());
         }
 
         public void PrintTable()

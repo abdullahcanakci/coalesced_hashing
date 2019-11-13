@@ -29,14 +29,15 @@ namespace file_organization
 
                 int[] protoList = createRandomList(numberOfElements).ToArray();
                 //int[] protoList = new int[] {27, 18, 29, 28, 39, 13, 16, 42, 17};
-
-                Storage lisch = new Storage(new LISCHResolver(), protoList);
-                Storage lich = new Storage(new LICHResolver(), protoList);
-                Storage eisch = new Storage(new EISCHResolver(), protoList);
-                Storage eich = new Storage(new EICHResolver(), protoList);
-
-                Storage beisch = new Storage(new BEISCHResolver(), protoList);
-                Storage rlisch = new Storage(new RLISCHResolver(), protoList);
+                Storage[] storages = new Storage[]
+                {
+                    new Storage(new LISCHResolver(), protoList),
+                    new Storage(new LICHResolver(), protoList),
+                    new Storage(new EISCHResolver(), protoList),
+                    new Storage(new EICHResolver(), protoList),
+                    new Storage(new BEISCHResolver(), protoList),
+                    new Storage(new RLISCHResolver(), protoList)
+                };
 
                 bool inMenu = true;
 
@@ -68,63 +69,42 @@ namespace file_organization
                         int select = PrintMenu(
                             "Enter algoritm you want to print table of",
                             new string[] {
-                            "Next",
-                            "LISCH",
+                            "LISCH", // 0
                             "LICH",
                             "EISCH",
                             "EICH",
                             "BEISCH",
                             "RLISCH",
-                            "ALL"
+                            "ALL", // 6
+                            "Next", // 7
                             }
                         );
-                        switch (select)
+                        if(select == 7)
                         {
-                            case 0:
-                                tablePrinting = false;
-                                continue;
-                            case 1:
-                                lisch.PrintTable();
-                                break;
-                            case 2:
-                                lich.PrintTable();
-                                break;
-                            case 3:
-                                eisch.PrintTable();
-                                break;
-                            case 4:
-                                eich.PrintTable();
-                                break;
-                            case 5:
-                                beisch.PrintTable();
-                                break;
-                            case 6:
-                                rlisch.PrintTable();
-                                break;
-                            case 7:
-                                lisch.PrintTable();
-                                lich.PrintTable();
-                                eisch.PrintTable();
-                                eich.PrintTable();
-
-                                beisch.PrintTable();
-                                rlisch.PrintTable();
-                                break;
-                            default:
-                                break;
+                            tablePrinting = false;
+                            continue;
                         }
+                        if(select == 6)
+                        {
+                            foreach (var item in storages)
+                            {
+                                item.PrintTable();
+                            }
+                            continue;
+                        }
+                        storages[select].PrintTable();
+
+                        
 
                     }
 
                     if (comparePrinting)
                     {
                         Console.WriteLine("{0, 10} |{1}|{2}|{3}|", "Name", "Packing Factor", "Collision", "Number of Probes");
-                        lisch.PrintInfo();
-                        lich.PrintInfo();
-                        eisch.PrintInfo();
-                        eich.PrintInfo();
-                        beisch.PrintInfo();
-                        rlisch.PrintInfo();
+                        foreach (var item in storages)
+                        {
+                            item.PrintInfo();
+                        }
                     }
 
 
@@ -134,16 +114,11 @@ namespace file_organization
                         Console.WriteLine("Query?");
                         int key = int.Parse(Console.ReadLine());
                         Console.WriteLine("{0, 7} | {1, 7} | {2, 5}", "Name", "Address", "Probes");
-                        lisch.PrintSearch(key);
-                        lich.PrintSearch(key);
-                        eisch.PrintSearch(key);
-                        eich.PrintSearch(key);
-                        beisch.PrintSearch(key);
-                        rlisch.PrintSearch(key);
+                        foreach (var item in storages)
+                        {
+                            item.PrintSearch(key);
+                        }
                     }
-
-
-
                 }
             }
         }

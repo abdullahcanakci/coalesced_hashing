@@ -20,6 +20,7 @@ namespace file_organization
         public int NumberOfProbes { get; private set; } = 0;
         public int Capacity => storage.Length;
         public double PackingFactor => (Count/(double)storagePrime) * 100;
+        public double ProbePerKey => NumberOfProbes / (double)Count;
 
         public String ResolverName => resolver.Name;
 
@@ -180,7 +181,8 @@ namespace file_organization
             Console.Write("Number of Items: {0} | Capacity: {1} | ", this.Count, this.Capacity);
             Console.Write("Packing Factor: {0:0.00} | ", this.PackingFactor);
             Console.Write("Collisions: {0} | ", this.NumberOfCollisions);
-            Console.Write("Probe Number: {0} | \n\n", this.NumberOfProbes);
+            Console.Write("Probe Number: {0} | ", this.NumberOfProbes);
+            Console.Write("Probe/Key: {0:0.000} |\n\n", this.ProbePerKey);
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Write("Ind");
             for(int i = 0; i < 15; i++)
@@ -228,7 +230,8 @@ namespace file_organization
             Console.Write("{0, 11}| ", this.resolver.Name);
             Console.Write("{0, 13 :0.00}| ", this.PackingFactor);
             Console.Write("{0, 8}| ", this.NumberOfCollisions);
-            Console.Write("{0, 15}| \n", this.NumberOfProbes);
+            Console.Write("{0, 15}| ", this.NumberOfProbes);
+            Console.Write("{0, 8 :0.000}|\n", this.ProbePerKey);
         }
 
         public void PrintSearch(int key)

@@ -113,7 +113,7 @@ namespace file_organization
 
                     if (comparePrinting)
                     {
-                        Console.WriteLine("{0, 10} |{1}|{2}|{3}|", "Name", "Packing Factor", "Collision", "Number of Probes");
+                        Console.WriteLine("{0, 10} |{1}|{2}|{3}|{4}|", "Name", "Packing Factor", "Collision", "Number of Probes", "Probe/Key");
                         foreach (var item in storages)
                         {
                             item.PrintInfo();
